@@ -1,24 +1,24 @@
 #include <array>
 #include <iostream>
-#include <cmath>
 #include <string>
 #include <vector>
 
-#include "Add.h"
+#include "Affine.h"
 #include "Bijection.h"
-
-std::ostream& operator<<(std::ostream& stream, const std::array<double, 2>& x)
-{
-    stream << "[" << x[0] << ", " << x[1] << "]";
-    return stream;
-}
 
 int main()
 {
-    Bijection<std::array<double, 2>, double> f(Add{});
+    Bijection<double, double> f{Affine1D{0.2, 4.3}};
 
-    std::cout << "Applying for [2, 2]: " << apply(f, {2,2}) << std::endl;
-    std::cout << "Applying for [3, 6]: " << apply(f, {3,6}) << std::endl;
-    std::cout << "Inverting for 4: " << invert(f, 4) << std::endl;
-    std::cout << "Inverting for 9: " << invert(f, 9) << std::endl;
+    std::vector<double> values{
+        2,
+        3,
+    };
+    for (const auto& v : values)
+    {
+        auto fv = apply(f, v);
+        std::cout << "Using: " << v << std::endl;
+        std::cout << "Applying: " << fv << std::endl;
+        std::cout << "Inverting: " << invert(f, fv) << std::endl;
+    }
 }
