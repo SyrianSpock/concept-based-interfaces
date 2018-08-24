@@ -2,6 +2,7 @@
 #include <type_traits>
 #include <utility>
 
+template<typename Input, typename Output>
 class Applyable
 {
 public:
@@ -23,16 +24,16 @@ public:
         return *this;
     }
 
-    friend void apply(const Applyable& d)
+    friend Output apply(const Applyable& d, Input in)
     {
-        d.m_impl->do_apply();
+        return d.m_impl->do_apply(in);
     }
 
 private:
     struct concept_t
     {
         virtual ~concept_t() {}
-        virtual void do_apply() const = 0;
+        virtual Output do_apply(Input) const = 0;
     };
     template <typename T>
     struct model_t : public concept_t
@@ -41,9 +42,9 @@ private:
         model_t(const T& v) : m_data(v) {}
         model_t(T&& v) : m_data(std::move(v)) {}
 
-        void do_apply() const override
+        Output do_apply(Input in) const override
         {
-            apply(m_data);
+            return apply(m_data, in);
         }
 
         T m_data;

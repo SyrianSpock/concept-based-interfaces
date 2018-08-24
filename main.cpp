@@ -4,23 +4,28 @@
 
 #include "Applyable.h"
 
-struct Square
+struct Square {};
+double apply(const Square&, double x)
 {
-    double x;
-};
-void apply(const Square& s)
+    return x * x;
+}
+
+struct Double {};
+double apply(const Double&, double x)
 {
-    std::cout << s.x * s.x << std::endl;
+    return 2 * x;
 }
 
 int main()
 {
-    std::vector<Applyable> fs;
-    fs.push_back(Square{4});
-    fs.push_back(Square{9});
+    std::vector<Applyable<double, double>> fs;
+    fs.push_back(Square{});
+    fs.push_back(Double{});
 
     for (const auto& f : fs)
     {
-        apply(f);
+        std::cout << apply(f, 4) << std::endl;
+        std::cout << apply(f, 9) << std::endl;
+        std::cout << std::endl;
     }
 }
