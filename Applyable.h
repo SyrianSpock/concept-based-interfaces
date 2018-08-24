@@ -2,7 +2,8 @@
 #include <type_traits>
 #include <utility>
 
-template<typename Input, typename Output>
+/// Apply some operation to a type A which yields a result of type B
+template<typename A, typename B>
 class Applyable
 {
 public:
@@ -24,7 +25,7 @@ public:
         return *this;
     }
 
-    friend Output apply(const Applyable& d, Input in)
+    friend B apply(const Applyable& d, A in)
     {
         return d.m_impl->do_apply(in);
     }
@@ -33,7 +34,7 @@ private:
     struct concept_t
     {
         virtual ~concept_t() {}
-        virtual Output do_apply(Input) const = 0;
+        virtual B do_apply(A) const = 0;
     };
     template <typename T>
     struct model_t : public concept_t
@@ -42,7 +43,7 @@ private:
         model_t(const T& v) : m_data(v) {}
         model_t(T&& v) : m_data(std::move(v)) {}
 
-        Output do_apply(Input in) const override
+        B do_apply(A in) const override
         {
             return apply(m_data, in);
         }
